@@ -95,7 +95,7 @@ def main():
         print("Task description cannot be empty.")
         return
 
-    print("\n[+] Generating code via Groq (Llama 3.3)...")
+    print("\n[+] Generating code via Groq...")
     code = generate_code(task)
 
     print("\n" + "=" * 50)

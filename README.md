@@ -1,17 +1,52 @@
-# Natural Language to Code Generator (Week 1)
+# Natural Language to Code Generator
 
-A fast, lightweight CLI coding agent that converts natural language task descriptions into clean, executable Python code using Groq and Meta's Llama 3.3 70B model.
+A lightweight CLI that converts natural-language task descriptions into clean,
+executable Python scripts using Groq-hosted language models.
 
 ## Features
-- **Prompt Isolation:** Strict system prompt enforcing code-only returns.
-- **Defensive Regex Sanitation:** Automatically strips accidental markdown backticks and fences.
-- **Dual Output:** Streams code to terminal standard output and auto-saves to `.py` script files.
-- **Comprehensive Coverage:** Verified against 8 core tasks across math, string manipulation, and nested collection operations.
+
+- Strict system prompting for code-only model responses.
+- Removes accidental Markdown code fences before saving output.
+- Prints generated code and saves it under `generated_scripts/`.
+- Includes a batch harness covering eight common Python tasks.
 
 ## Setup
-```bash
-git clone <your-repo-link>
-cd nl2code_generator
+
+```powershell
+git clone https://github.com/Jeevanp69/nl2code-generator.git
+cd nl2code-generator
 python -m venv venv
-source venv/bin/activate  # Or .\venv\Scripts\Activate.ps1 on Windows
+.\venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+```
+
+Create a `.env` file in the project root:
+
+```dotenv
+GROQ_API_KEY=your_groq_api_key
+```
+
+Optionally set `GROQ_MODEL` to a model available to your Groq account. Without
+it, the generator selects a supported model from the account's available model
+list.
+
+## Usage
+
+Generate one script:
+
+```powershell
+python generate.py "Check if a number is prime and return a boolean" -o is_prime.py
+```
+
+Generate all eight example scripts:
+
+```powershell
+python test_tasks.py
+```
+
+Generated files are written to `generated_scripts/`.
+
+## Security
+
+Keep `.env` private and never commit API keys. Rotate a key immediately if it
+has been exposed.
