@@ -1,8 +1,9 @@
+import argparse
 import os
 import re
 import sys
-import argparse
-from datetime import datetime
+from datetime import datetime, timezone
+
 from dotenv import load_dotenv
 from groq import Groq
 
@@ -31,7 +32,7 @@ def clean_code(raw_text: str) -> str:
     text = re.sub(r"\s*```$", "", text)
     return text.strip()
 
-def resolve_model(client: Groq, requested_model: str = None) -> str:
+def resolve_model(client: Groq, requested_model: str | None = None) -> str:
     """Use an explicit model or choose one currently available to the API key."""
     if requested_model:
         return requested_model
@@ -46,7 +47,7 @@ def resolve_model(client: Groq, requested_model: str = None) -> str:
         "Set GROQ_MODEL in .env to a model listed in the Groq console."
     )
 
-def generate_code(prompt: str, model: str = None) -> str:
+def generate_code(prompt: str, model: str | None = None) -> str:
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
         print("Error: GROQ_API_KEY is not set in your .env file.", file=sys.stderr)
@@ -65,12 +66,12 @@ def generate_code(prompt: str, model: str = None) -> str:
     raw_content = response.choices[0].message.content
     return clean_code(raw_content)
 
-def save_code(code: str, output_path: str = None) -> str:
+def save_code(code: str, output_path: str | None = None) -> str:
     output_dir = "generated_scripts"
     os.makedirs(output_dir, exist_ok=True)
 
     if not output_path:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
         output_path = os.path.join(output_dir, f"generated_{timestamp}.py")
     else:
         if not output_path.endswith(".py"):
